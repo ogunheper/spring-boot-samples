@@ -7,6 +7,7 @@ import com.sahabt.persistence.repositories.BookRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,41 +15,17 @@ import java.util.Random;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-@Transactional
 @Slf4j
-public class BookCommandService {
+@Service
+public class BookCommandSingleService {
 
     private static final Random random = new Random();
 
-    private final BookRepository bookRepository;
-    private final AuthorRepository authorRepository;
+    @Autowired
+    private BookRepository bookRepository;
 
     @Autowired
-    private BookCommandSingleService bookCommandSingleService;
-
-    public void createNewBooks(int count) {
-        int createdBookCount = 0;
-
-        for (int i = 0; i < count; ++i) {
-            // final Object savepoint = TransactionAspectSupport.currentTransactionStatus().createSavepoint();
-
-            try {
-                bookCommandSingleService.createNewBook(
-                        UUID.randomUUID().toString(),
-                        UUID.randomUUID().toString(),
-                        random.nextInt(5)
-                );
-                ++createdBookCount;
-                // TransactionAspectSupport.currentTransactionStatus().releaseSavepoint(savepoint);
-
-            } catch (BookCommandSingleService.NotAllowedAuthorException e) {
-                log.warn("NotAllowedAuthorException");
-                // TransactionAspectSupport.currentTransactionStatus().rollbackToSavepoint(savepoint);
-            }
-        }
-
-        log.info("createdBookCount: {}", createdBookCount);
-    }
+    private AuthorRepository authorRepository;
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Book createNewBook(String isbn, String title, Integer authorId) {
@@ -73,6 +50,6 @@ public class BookCommandService {
         return null;
     }
 
-    private class NotAllowedAuthorException extends RuntimeException {
+    public class NotAllowedAuthorException extends RuntimeException {
     }
 }

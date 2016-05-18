@@ -65,6 +65,12 @@ public class BookController {
         bookService.createNewBook(createBookRequest);
     }
 
+    @RequestMapping(path = "/batch", method = RequestMethod.POST)
+    public void createNewBooks(@RequestParam int count) {
+
+        bookService.createNewBooks(count);
+    }
+
     @RequestMapping(path = "/cache", method = RequestMethod.DELETE)
     public void clearBookCache() {
 

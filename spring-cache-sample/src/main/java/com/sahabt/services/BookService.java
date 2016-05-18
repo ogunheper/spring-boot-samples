@@ -50,7 +50,11 @@ public class BookService {
     }
 
     public void createNewBook(CreateBookRequest createBookRequest) {
-        bookCommandService.createNewBook(createBookRequest.getIsbn(), createBookRequest.getTitle(), createBookRequest.getAuthor());
+        bookCommandService.createNewBook(createBookRequest.getIsbn(), createBookRequest.getTitle(), 0);
+    }
+
+    public void createNewBooks(int count) {
+        bookCommandService.createNewBooks(count);
     }
 
     public void init() {
