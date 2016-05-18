@@ -2,6 +2,7 @@ package com.sahabt.controllers;
 
 import com.google.common.collect.Lists;
 import com.sahabt.models.Book;
+import com.sahabt.models.request.CreateBookRequest;
 import com.sahabt.services.BookService;
 import com.sahabt.services.LibrarianService;
 import lombok.RequiredArgsConstructor;
@@ -40,10 +41,10 @@ public class BookController {
     public Book getBooksById(@PathVariable Integer id) {
 
         // log.info(librarianService.whoAmI());
-        Book book = bookService.getBookById(id).get();
-        book.setAuthor("ddd");
+        final Book book = bookService.getBookById(id).get();
+        log.info("returning book {}@{}", book, book.hashCode());
 
-        return bookService.getBookById(id).get();
+        return book;
     }
 
     @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
@@ -56,6 +57,12 @@ public class BookController {
     public void updateBookById(@PathVariable Integer id) {
 
         bookService.updateBookTitleByIdAndReturn(id, "abc");
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public void createNewBook(@RequestBody CreateBookRequest createBookRequest) {
+
+        bookService.createNewBook(createBookRequest);
     }
 
     @RequestMapping(path = "/cache", method = RequestMethod.DELETE)

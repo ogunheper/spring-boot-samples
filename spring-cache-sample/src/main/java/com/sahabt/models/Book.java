@@ -1,16 +1,18 @@
 package com.sahabt.models;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-@Data
+import java.io.Serializable;
+
+@Getter
+@Setter
+@RequiredArgsConstructor
 @Builder
-public class Book {
+@ToString
+public class Book implements Serializable {
 
     private final Integer id;
     private final String isbn;
     private final String title;
-    private String author;
-
-    // private final ImmutableList<Integer> integerList;
+    private final String author;
 }
