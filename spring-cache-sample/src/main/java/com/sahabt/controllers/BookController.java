@@ -12,14 +12,14 @@ import java.util.Collection;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/books", method = RequestMethod.GET)
+@RequestMapping(value = "/books")
 @Slf4j
 public class BookController {
 
     private final BookService bookService;
     private final LibrarianService librarianService;
 
-    @RequestMapping
+    @RequestMapping(method = RequestMethod.GET)
     public Collection<Book> getBooks() {
         return Lists.newArrayList(
                 Book.builder().id(1).isbn("xyz").title("Küçük Prens").author("Aunt...").build(),
@@ -27,7 +27,7 @@ public class BookController {
         );
     }
 
-    @RequestMapping(path = "/{id}/{isbn}")
+    @RequestMapping(path = "/{id}/{isbn}", method = RequestMethod.GET)
     public Book getBooksByIdSample(
             @PathVariable(value = "id") String isbn,
             @PathVariable(value = "isbn") Integer id,
@@ -36,10 +36,31 @@ public class BookController {
         return Book.builder().id(id).isbn(isbn).title(title).author("Author").build();
     }
 
-    @RequestMapping(path = "/{id}")
+    @RequestMapping(path = "/{id}", method = RequestMethod.GET)
     public Book getBooksById(@PathVariable Integer id) {
 
-        log.info(librarianService.whoAmI());
-        return bookService.getBookById(id);
+        // log.info(librarianService.whoAmI());
+        Book book = bookService.getBookById(id).get();
+        book.setAuthor("ddd");
+
+        return bookService.getBookById(id).get();
+    }
+
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
+    public void deleteBooksById(@PathVariable Integer id) {
+
+        bookService.deleteBookById(id);
+    }
+
+    @RequestMapping(path = "/{id}", method = RequestMethod.PUT)
+    public void updateBookById(@PathVariable Integer id) {
+
+        bookService.updateBookTitleByIdAndReturn(id, "abc");
+    }
+
+    @RequestMapping(path = "/cache", method = RequestMethod.DELETE)
+    public void clearBookCache() {
+
+        bookService.clearBookCache();
     }
 }

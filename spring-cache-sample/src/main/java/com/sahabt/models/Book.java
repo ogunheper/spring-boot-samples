@@ -10,7 +10,7 @@ public class Book {
     private final Integer id;
     private final String isbn;
     private final String title;
-    private final String author;
+    private String author;
 
     // private final ImmutableList<Integer> integerList;
 }
